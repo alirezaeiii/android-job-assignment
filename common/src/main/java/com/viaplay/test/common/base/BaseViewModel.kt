@@ -39,7 +39,11 @@ abstract class BaseViewModel<DataType, STATE : BaseScreenState<DataType, STATE>,
         }
     }
 
-    protected abstract fun onSuccess(items: DataType)
+    protected open fun onSuccess(items: DataType) {
+        updateState { old ->
+            old.withSuccess(items)
+        }
+    }
 
     protected fun updateState(reducer: (STATE) -> STATE) {
         _state.update(reducer)

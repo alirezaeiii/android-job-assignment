@@ -26,3 +26,13 @@ fun <TYPE, STATE : BaseScreenState<TYPE, STATE>> STATE.withError(
             isWarning = isWarning
         )
     )
+
+fun <TYPE, STATE : BaseScreenState<TYPE, STATE>> STATE.withSuccess(items: TYPE): STATE =
+    copyWithBase(
+        base.copy(
+            items = items,
+            isLoading = false,
+            isRefreshing = false,
+            error = ""
+        )
+    )

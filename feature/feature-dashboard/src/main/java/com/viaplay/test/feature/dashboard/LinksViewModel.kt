@@ -13,15 +13,5 @@ class LinksViewModel @Inject constructor(
 ) : BaseViewModel<List<Link>, LinksViewState, Nothing, Nothing>(
     repository,
     LinksViewState(base = ViewState(isLoading = true))
-) {
+)
 
-    override fun onSuccess(items: List<Link>) {
-        updateState {
-            LinksViewState(
-                base = ViewState(
-                    items = items
-                )
-            )
-        }
-    }
-}

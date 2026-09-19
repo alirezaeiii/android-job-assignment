@@ -20,15 +20,4 @@ class SectionViewModel @Inject constructor(
     SectionViewState(base = ViewState(isLoading = true)),
     savedStateHandle.get<Link>(LINK)?.id,
     savedStateHandle.get<Link>(LINK)?.href?.cleanHref()
-) {
-
-    override fun onSuccess(items: Section) {
-        updateState {
-            SectionViewState(
-                base = ViewState(
-                    items = items
-                )
-            )
-        }
-    }
-}
+)

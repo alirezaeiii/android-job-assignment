@@ -15,9 +15,17 @@ import javax.inject.Inject
 class SectionViewModel @Inject constructor(
     repository: BaseRepository<Section, String, String>,
     savedStateHandle: SavedStateHandle
-) : BaseViewModel<Section, SectionViewState, String, String>(
+) : BaseViewModel<Section, SectionViewState, String, String, DetailsUiEvent>(
     repository,
     SectionViewState(base = ViewState(isLoading = true)),
     savedStateHandle.get<Link>(LINK)?.id,
     savedStateHandle.get<Link>(LINK)?.href?.cleanHref()
-)
+) {
+    override fun createWarningEvent(message: String): DetailsUiEvent {
+        return DetailsUiEvent.ShowWarning(message)
+    }
+
+    fun onBackClick() {
+        emitEvent(DetailsUiEvent.NavigateUp)
+    }
+}

@@ -9,11 +9,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 
-abstract class BaseViewModel<DataType, STATE : BaseScreenState<DataType, STATE>, QueryType, FetchType>(
+abstract class BaseViewModel<DataType, STATE : BaseScreenState<DataType, STATE>, QueryType, FetchType, EVENT : UiEvent>(
     private val repository: BaseRepository<DataType, QueryType, FetchType>,
     initialState: STATE,
     queryParam: QueryType? = null,
@@ -24,14 +25,10 @@ abstract class BaseViewModel<DataType, STATE : BaseScreenState<DataType, STATE>,
     private val _state = MutableStateFlow(initialState)
     val state: StateFlow<STATE> = _state.asStateFlow()
 
-    private val _showWarningUiEvent = MutableSharedFlow<UiEvent>()
-    val showWarningUiEvent = _showWarningUiEvent.asSharedFlow()
+    private val _uiEvent = MutableSharedFlow<EVENT>()
+    val uiEvent = _uiEvent.asSharedFlow()
 
     private var job: Job? = null
-
-    sealed class UiEvent {
-        data class ShowWarning(val message: String) : UiEvent()
-    }
 
     init {
         if (loadDataOnInit) {
@@ -85,6 +82,14 @@ abstract class BaseViewModel<DataType, STATE : BaseScreenState<DataType, STATE>,
         old.withError(msg, isWarning)
 
     private suspend fun emitWarning(message: String) {
-        _showWarningUiEvent.emit(UiEvent.ShowWarning(message))
+        _uiEvent.emit(createWarningEvent(message))
+    }
+
+    protected abstract fun createWarningEvent(message: String): EVENT
+
+    protected fun emitEvent(event: EVENT) {
+        viewModelScope.launch {
+            _uiEvent.emit(event)
+        }
     }
 }

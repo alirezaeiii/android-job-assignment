@@ -47,7 +47,7 @@ fun DetailsScreen(
                     Text(text = stringResource(id = R.string.section))
                 },
                 navigationIcon = {
-                    IconButton(onClick = navigateUp) {
+                    IconButton(onClick = viewModel::onBackClick) {
                         Icon(Icons.AutoMirrored.Default.ArrowBack, "Back")
                     }
                 }
@@ -57,7 +57,9 @@ fun DetailsScreen(
             Content(
                 viewModel = viewModel,
                 snackbarHostState = snackbarHostState,
-                refresh = { viewModel.refresh(link?.id, link?.href?.cleanHref()) }) { state ->
+                refresh = { viewModel.refresh(link?.id, link?.href?.cleanHref()) },
+                onNavigateUp = navigateUp
+            ) { state ->
                 Column(modifier = Modifier.padding(padding)) {
                     ViaplaySwipeRefresh(
                         modifier = Modifier.align(Alignment.CenterHorizontally),

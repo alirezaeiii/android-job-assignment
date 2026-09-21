@@ -1,6 +1,5 @@
 package com.viaplay.test
 
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -13,7 +12,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.google.gson.Gson
 import com.viaplay.test.common.ui.common.Routes
 import com.viaplay.test.common.ui.common.Routes.Companion.LINK
 import com.viaplay.test.common.ui.theme.AppTheme
@@ -45,11 +43,8 @@ class MainActivity : AppCompatActivity() {
 fun NavGraph(navController: NavHostController) {
     NavHost(navController, startDestination = Routes.LINKS.title) {
         composable(Routes.LINKS.title) {
-            DashboardScreen(hiltViewModel()) { link ->
-                val json = Uri.encode(Gson().toJson(link))
-                navController.navigate(
-                    Routes.Details.title.replace("{${LINK}}", json)
-                )
+            DashboardScreen(hiltViewModel()) { route ->
+                navController.navigate(route)
             }
         }
         composable(

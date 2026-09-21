@@ -69,4 +69,17 @@ class SectionViewModelTest {
             cancelAndIgnoreRemainingEvents()
         }
     }
+
+    @Test
+    fun `onBackClick emits NavigateUp event`() = runTest {
+        every { repository.getResult(any(), any(), any()) } returns flowOf(Async.Loading())
+        val viewModel = SectionViewModel(repository, savedStateHandle)
+
+        viewModel.uiEvent.test {
+            viewModel.onBackClick()
+            val event = awaitItem()
+            assertTrue(event is DetailsUiEvent.NavigateUp)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
 }

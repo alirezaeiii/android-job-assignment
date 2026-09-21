@@ -29,7 +29,7 @@ import com.viaplay.test.domain.model.Link
 @Composable
 fun DashboardScreen(
     viewModel: LinksViewModel,
-    navigateToDetail: (Link) -> Unit
+    navigateToDetail: (String) -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
@@ -46,7 +46,8 @@ fun DashboardScreen(
         content = { padding ->
             Content(
                 viewModel = viewModel,
-                snackbarHostState = snackbarHostState
+                snackbarHostState = snackbarHostState,
+                onNavigate = navigateToDetail
             ) { state ->
                 Column(modifier = Modifier.padding(padding)) {
                     ViaplaySwipeRefresh(
@@ -54,7 +55,7 @@ fun DashboardScreen(
                         state = state,
                         refresh = viewModel::refresh
                     ) {
-                        VerticalCollection(state.base.items ?: emptyList(), navigateToDetail)
+                        VerticalCollection(state.base.items ?: emptyList(), viewModel::onLinkClick)
                     }
                 }
             }
@@ -95,4 +96,3 @@ private fun VerticalListItem(
         )
     }
 }
-

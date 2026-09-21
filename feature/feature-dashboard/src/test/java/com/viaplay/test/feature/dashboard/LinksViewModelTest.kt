@@ -43,9 +43,9 @@ class LinksViewModelTest {
     @Test
     fun `initial state has loading true`() = runTest {
         every { repository.getResult(null, null, any()) } returns flowOf(Async.Loading())
-        
+
         val viewModel = LinksViewModel(repository)
-        
+
         viewModel.state.test {
             val state = awaitItem()
             assertTrue(state.base.isLoading)
@@ -67,6 +67,30 @@ class LinksViewModelTest {
         viewModel.state.test {
             val state = awaitItem()
             assertEquals(links, state.base.items)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `refresh emits ShowWarning event on warning error`() = runTest {
+        val warningMessage = "Something went wrong"
+        every {
+            repository.getResult(null, null, true)
+        } returns flowOf(
+            Async.Error(
+                message = warningMessage,
+                isWarning = true
+            )
+        )
+        val viewModel = LinksViewModel(repository)
+
+        viewModel.uiEvent.test {
+            viewModel.refresh()
+            val event = awaitItem()
+            assertEquals(
+                DashboardUiEvent.ShowWarning(warningMessage),
+                event
+            )
             cancelAndIgnoreRemainingEvents()
         }
     }

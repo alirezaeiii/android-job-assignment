@@ -45,9 +45,9 @@ class SectionViewModelTest {
     @Test
     fun `initial state has loading true`() = runTest {
         every { repository.getResult(any(), any(), any()) } returns flowOf(Async.Loading())
-        
+
         val viewModel = SectionViewModel(repository, savedStateHandle)
-        
+
         viewModel.state.test {
             val state = awaitItem()
             assertTrue(state.base.isLoading)
@@ -66,6 +66,30 @@ class SectionViewModelTest {
         viewModel.state.test {
             val state = awaitItem()
             assertEquals(section, state.base.items)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `refresh emits ShowWarning event on warning error`() = runTest {
+        val warningMessage = "Something went wrong"
+        every {
+            repository.getResult(any(), any(), any())
+        } returns flowOf(
+            Async.Error(
+                message = warningMessage,
+                isWarning = true
+            )
+        )
+        val viewModel = SectionViewModel(repository, savedStateHandle)
+
+        viewModel.uiEvent.test {
+            viewModel.refresh()
+            val event = awaitItem()
+            assertEquals(
+                DetailsUiEvent.ShowWarning(warningMessage),
+                event
+            )
             cancelAndIgnoreRemainingEvents()
         }
     }

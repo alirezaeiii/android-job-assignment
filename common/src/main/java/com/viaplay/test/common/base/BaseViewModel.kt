@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.update
 abstract class BaseViewModel<DataType, STATE : BaseScreenState<DataType, STATE>, QueryType, FetchType, EVENT : UiEvent>(
     private val repository: BaseRepository<DataType, QueryType, FetchType>,
     initialState: STATE,
+    private val createWarningEvent: (String) -> EVENT,
     queryParam: QueryType? = null,
     fetchParam: FetchType? = null,
     loadDataOnInit: Boolean = true
@@ -84,8 +85,6 @@ abstract class BaseViewModel<DataType, STATE : BaseScreenState<DataType, STATE>,
     private suspend fun emitWarning(message: String) {
         _uiEvent.emit(createWarningEvent(message))
     }
-
-    protected abstract fun createWarningEvent(message: String): EVENT
 
     protected fun emitEvent(event: EVENT) {
         viewModelScope.launch {

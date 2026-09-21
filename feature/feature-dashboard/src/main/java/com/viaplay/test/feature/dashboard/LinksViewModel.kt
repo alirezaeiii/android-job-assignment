@@ -16,12 +16,9 @@ class LinksViewModel @Inject constructor(
     repository: BaseRepository<List<Link>, Nothing, Nothing>
 ) : BaseViewModel<List<Link>, LinksViewState, Nothing, Nothing, DashboardUiEvent>(
     repository,
-    LinksViewState(base = ViewState(isLoading = true))
+    LinksViewState(base = ViewState(isLoading = true)),
+    DashboardUiEvent::ShowWarning
 ) {
-    override fun createWarningEvent(message: String): DashboardUiEvent {
-        return DashboardUiEvent.ShowWarning(message)
-    }
-
     fun onLinkClick(link: Link) {
         val json = Uri.encode(Gson().toJson(link))
         val route = Routes.Details.title.replace("{${LINK}}", json)

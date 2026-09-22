@@ -84,7 +84,6 @@ class SectionViewModelTest {
         val viewModel = SectionViewModel(repository, savedStateHandle)
 
         viewModel.uiEvent.test {
-            viewModel.refresh()
             val event = awaitItem()
             assertEquals(
                 DetailsUiEvent.ShowWarning(warningMessage),

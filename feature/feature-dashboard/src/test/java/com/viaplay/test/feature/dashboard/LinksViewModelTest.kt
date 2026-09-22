@@ -85,7 +85,6 @@ class LinksViewModelTest {
         val viewModel = LinksViewModel(repository)
 
         viewModel.uiEvent.test {
-            viewModel.refresh()
             val event = awaitItem()
             assertEquals(
                 DashboardUiEvent.ShowWarning(warningMessage),

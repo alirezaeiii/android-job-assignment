@@ -18,8 +18,8 @@ abstract class BaseViewModel<DataType, STATE : BaseScreenState<DataType, STATE>,
     private val repository: BaseRepository<DataType, QueryType, FetchType>,
     initialState: STATE,
     private val createWarningEvent: (String) -> EVENT,
-    queryParam: QueryType? = null,
-    fetchParam: FetchType? = null,
+    private val queryParam: QueryType? = null,
+    private val fetchParam: FetchType? = null,
     loadDataOnInit: Boolean = true
 ) : ViewModel() {
 
@@ -33,7 +33,7 @@ abstract class BaseViewModel<DataType, STATE : BaseScreenState<DataType, STATE>,
 
     init {
         if (loadDataOnInit) {
-            refresh(queryParam, fetchParam)
+            refresh()
         }
     }
 
@@ -48,8 +48,6 @@ abstract class BaseViewModel<DataType, STATE : BaseScreenState<DataType, STATE>,
     }
 
     fun refresh(
-        queryParam: QueryType? = null,
-        fetchParam: FetchType? = null,
         forceRefresh: Boolean = true
     ) {
         job?.cancel()

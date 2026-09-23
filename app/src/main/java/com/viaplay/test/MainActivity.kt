@@ -15,10 +15,8 @@ import androidx.navigation.navArgument
 import com.viaplay.test.common.ui.common.Routes
 import com.viaplay.test.common.ui.common.Routes.Companion.LINK
 import com.viaplay.test.common.ui.theme.AppTheme
-import com.viaplay.test.common.utils.asLink
-import com.viaplay.test.domain.model.Link
-import com.viaplay.test.feature.details.DetailsScreen
 import com.viaplay.test.feature.dashboard.DashboardScreen
+import com.viaplay.test.feature.details.DetailsScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -53,10 +51,9 @@ fun NavGraph(navController: NavHostController) {
                     type = LinkNavType()
                 }
             )
-        ) { from ->
+        ) {
             DetailsScreen(
                 hiltViewModel(),
-                from.arguments?.asLink(LINK, Link::class.java),
                 navController::navigateUp
             )
         }

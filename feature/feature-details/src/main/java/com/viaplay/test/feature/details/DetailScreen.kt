@@ -26,14 +26,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.viaplay.test.common.base.Content
 import com.viaplay.test.common.ui.common.ViaplaySwipeRefresh
-import com.viaplay.test.common.utils.cleanHref
-import com.viaplay.test.domain.model.Link
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsScreen(
     viewModel: SectionViewModel,
-    link: Link?,
     navigateUp: () -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -57,14 +54,14 @@ fun DetailsScreen(
             Content(
                 viewModel = viewModel,
                 snackbarHostState = snackbarHostState,
-                refresh = { viewModel.refresh(link?.id, link?.href?.cleanHref()) },
+                refresh = viewModel::refresh,
                 onNavigateUp = navigateUp
             ) { state ->
                 Column(modifier = Modifier.padding(padding)) {
                     ViaplaySwipeRefresh(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         state = state,
-                        refresh = { viewModel.refresh(link?.id, link?.href?.cleanHref()) }
+                        refresh = viewModel::refresh
                     ) {
                         Column(
                             modifier = Modifier
